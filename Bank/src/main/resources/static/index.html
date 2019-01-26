@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="scripts/jquery-3.2.1.min.js"></script>
+<script src="scripts/tether.min.js"></script>
+<script src="scripts/bootstrap.min.js"></script>
+  
+<link rel="stylesheet" type="text/css" href="stylesheets/index.css">  
+  
+  <!-- Da ukljucim bootstrap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<meta charset="UTF-8">
+<title>Banka</title>
+
+<script>
+
+
+$(document).ready(
+		function() {
+	
+	$("#ok").click(function(){
+		
+		formData = JSON.stringify({
+            pan:$("#inputForm [name='pan']").val(), 
+            securitycode:$("#inputForm [name='code']").val(),
+            cardholdername:$("#inputForm [name='name']").val(),
+            expirationdate:$("#inputForm [name='date']").val(),
+        });
+		$.ajax({
+			url: "/card/checkCard",
+			type: "POST", 
+			data: formData,
+			
+			contentType: "application/json",
+			datatype: 'json',
+			success: function(data) {
+				
+			  }
+			});
+	});
+		});
+
+</script>
+
+</head>
+
+<body class="pozadina">
+
+	<h1 align="center" class="naslov">Bank</h1>
+	
+	<div class="container" style="margin-top: 30px;">
+	  <div class="row" style="background: #d5deea;">
+    	<div class="col-sm-2">
+    	</div>
+    	<div class="col-sm-8" style="background: #d5deea;">
+    	<h2 align="center">Please, enter your card information </h2>
+    	<form id="inputForm">
+      	<div>
+      		<label>PAN</label>
+    		<input type="text" class="form-control" name="pan" placeholder="PAN">
+      	</div><br>
+      	<div>
+      		<label>Security code</label>
+    		<input type="text" class="form-control" name="code" placeholder="Security code">
+      	</div><br>
+      	<div>
+      		<label>Card holder name</label>
+    		<input type="text" class="form-control" name="name" placeholder="Card holder name">
+      	</div><br>
+      	<div>
+      		<label>Expiration date</label>
+    		<input type="text" class="form-control" name="date" placeholder="yyyy-MM-dd">
+      	</div><br><br>
+      	
+      	
+      	<div >
+      		<button id="ok" style="margin-left: 580px; margin-bottom: 20px;" type="button" class="btn btn-warning">OK</button>
+      	</div>
+      	</form>
+      	
+    	</div>
+    	<div class="col-sm-2" style="background: #d5deea;">
+    	</div>
+  	</div>
+	</div>
+	
+</body>
+</html>
