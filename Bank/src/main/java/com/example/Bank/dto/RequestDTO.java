@@ -11,8 +11,6 @@ public class RequestDTO {
 	
 	private double amount;
 	
-	private double amountMag;
-	
 	private String merchant_order_id;
 	
 	private RequestDTO() {
@@ -49,14 +47,6 @@ public class RequestDTO {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
-	}
-
-	public double getAmountMag() {
-		return amountMag;
-	}
-
-	public void setAmountMag(double amountMag) {
-		this.amountMag = amountMag;
 	}
 
 	public String getMerchant_order_id() {

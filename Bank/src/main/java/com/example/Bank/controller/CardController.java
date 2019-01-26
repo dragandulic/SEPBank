@@ -46,7 +46,10 @@ public class CardController {
 					}
 				
 				if(now.compareTo(card.getExpirationdate())<=0){
-					System.out.println("vazi datum");
+					System.out.println("PODACI KUPCA: " + cards.get(i).getPan());
+					
+					
+					
 				}
 				
 			}

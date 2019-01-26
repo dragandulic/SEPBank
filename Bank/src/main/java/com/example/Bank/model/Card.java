@@ -10,9 +10,10 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
+//Kartica ustvari predstavlja kupca
 @Entity
 public class Card {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
