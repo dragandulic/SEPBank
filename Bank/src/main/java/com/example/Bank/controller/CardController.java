@@ -2,11 +2,8 @@ package com.example.Bank.controller;
 
 
 import java.text.DateFormat;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,47 +12,56 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Bank.model.Card;
-import com.example.Bank.repository.CardRepository;
+import com.example.Bank.service.CardService;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 @RestController
 @RequestMapping("/card")
 public class CardController {
 	
+	
 	@Autowired
-	private CardRepository cardRepository;
+	private CardService cardService;
+	
+	
+	public static final Pattern VALID_PAN_REGEX = 
+		    Pattern.compile("^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$", Pattern.CASE_INSENSITIVE);
+	
+	public static final Pattern VALID_SECURITYCODE_REGEX = 
+		    Pattern.compile("^[0-9]{3}$", Pattern.CASE_INSENSITIVE);
+	
+	public static final Pattern VALID_DATE_REGEX = 
+		    Pattern.compile("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", Pattern.CASE_INSENSITIVE);
+	
+	
+	
+	
+	
 	
 	@PostMapping("/checkCard")
 	public void check(@RequestBody Card card) {
+		boolean valid = false;
 		
-		List<Card> cards = cardRepository.findAll();
+		 Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
+		 Matcher matcher1 = VALID_SECURITYCODE_REGEX .matcher(card.getSecuritycode());
+		 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		 String reportDate = df.format(card.getExpirationdate());
 		
-		for(int i=0; i<cards.size(); i++) {
-			if(cards.get(i).getPan().equals(card.getPan()) && cards.get(i).getSecuritycode().equals(card.getSecuritycode())
-					&& cards.get(i).getCardholdername().equals(card.getCardholdername())) {
-				
-				
-				String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-				System.out.println(timeStamp);
-				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-				
-				Date now=null;
-				try {
-					now = formatter.parse(timeStamp);
-					} catch (ParseException e) {
-					  e.printStackTrace();
-					}
-				
-				if(now.compareTo(card.getExpirationdate())<=0){
-					System.out.println("PODACI KUPCA: " + cards.get(i).getPan());
-					
-					
-					
-				}
-				
-			}
-		}
+		 Matcher matcher2 = VALID_DATE_REGEX .matcher(reportDate);
+		 
+		 if(matcher.find() && matcher1.find() && matcher2.find()){
+			System.out.println("VALIDNOOOOOOOOOOOOOO");
+			
+			String res = cardService.checkcard(card);
+			
+		 }else{
+			 System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
+		 }
 		
-		
+	
 		
 	}
 
