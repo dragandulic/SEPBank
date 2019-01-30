@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Bank.dto.CardDTO;
 import com.example.Bank.model.Card;
 import com.example.Bank.service.CardService;
 
@@ -41,7 +42,7 @@ public class CardController {
 	
 	
 	@PostMapping("/checkCard")
-	public void check(@RequestBody Card card) {
+	public void check(@RequestBody CardDTO card) {
 		boolean valid = false;
 		
 		 Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
@@ -53,10 +54,7 @@ public class CardController {
 		 Matcher matcher2 = VALID_DATE_REGEX .matcher(reportDate);
 		 
 		 if(matcher.find() && matcher1.find() && matcher2.find()){
-			System.out.println("VALIDNOOOOOOOOOOOOOO");
-			
 			String res = cardService.checkcard(card);
-			
 		 }else{
 			 System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
 		 }
