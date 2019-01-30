@@ -17,12 +17,12 @@ public class RequestController {
 	private RequestService requestService;
 	
 	@PostMapping("/checkRequest")
-	public void checkRequest(@RequestBody Request request) {
+	public String checkRequest(@RequestBody Request request) {
 		
 		
 		String response = requestService.checkReq(request);
 		
-		
+		return "POZDRAV IZ PCC";
 	}
 	
 	@PostMapping("/forwardRequest")

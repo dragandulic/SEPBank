@@ -3,7 +3,10 @@ package com.example.Bank.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +15,7 @@ import java.util.Date;
 import java.text.ParseException;
 
 import com.example.Bank.dto.CardDTO;
+import com.example.Bank.dto.PCCrequestDTO;
 import com.example.Bank.model.Card;
 import com.example.Bank.repository.CardRepository;
 
@@ -21,6 +25,9 @@ public class CardService {
 
 	@Autowired
 	private CardRepository cardRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	
 	public String checkcard(CardDTO card) {
@@ -60,16 +67,26 @@ public class CardService {
 			
 		}
 		else {
+			//IDE NA PCC
 			
+			
+			PCCrequestDTO pcc = new PCCrequestDTO();
+			
+			pcc.setPan(card.getPan());
+			pcc.setCardholdername(card.getCardholdername());
+			pcc.setExpirationdate(card.getExpirationdate());
+			pcc.setSecuritycode(card.getSecuritycode());
+			
+			
+			HttpHeaders header = new HttpHeaders();	
+			HttpEntity entity = new HttpEntity(pcc, header);
+			
+			String s = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, String.class);
+			System.out.println(s);
 		}
 		
 		
-		
-		
-		
-		
-		
-		
+
 		return null;
 	}
 	

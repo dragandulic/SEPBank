@@ -36,7 +36,7 @@ public class RequestService {
 				HttpHeaders header = new HttpHeaders();
 				HttpEntity entity = new HttpEntity(request, header);
 				
-				String response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, String.class);
+				//String response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, String.class);
 			}
 		}
 		
