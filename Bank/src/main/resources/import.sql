@@ -1,5 +1,7 @@
 INSERT INTO `bank`.`merchant` (`id`, `name`,`merchant_id`,`merchant_password`,`bankaccount_id`) VALUES ('1','Matematicki vesnik','977dk4mdjw3bz82hd71abgm39dm48f','1','1');
 
+INSERT INTO `bank`.`merchant` (`id`, `name`,`merchant_id`,`merchant_password`,`bankaccount_id`) VALUES ('2','Hemijska industrija','977MHIik87?9iuT7ug%RFhu5d./','password@1','2');
+
 
 INSERT INTO `bank`.`bank_account` (`id`, `numberofaccount`,`sum`) VALUES ('1','977-1111111111111-11','10000');
 INSERT INTO `bank`.`bank_account` (`id`, `numberofaccount`,`sum`) VALUES ('2','977-2222222222222-22','20000');

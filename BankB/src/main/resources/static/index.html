@@ -26,11 +26,17 @@ $(document).ready(
 	
 	$("#ok").click(function(){
 		
+		var retval1 = validatePan(); 
+		var retval2 = validateSecurityCode(); 
+		var retval3 = validateDate(); 
+		
+		if(retval1 && retval2 && retval3){
 		formData = JSON.stringify({
             pan:$("#inputForm [name='pan']").val(), 
             securitycode:$("#inputForm [name='code']").val(),
             cardholdername:$("#inputForm [name='name']").val(),
             expirationdate:$("#inputForm [name='date']").val(),
+            merchantid:getCookie('merchantmag')
         });
 		$.ajax({
 			url: "/card/checkCard",
@@ -43,10 +49,59 @@ $(document).ready(
 				
 			  }
 			});
+		}
 	});
-		});
+});
 
+function getCookie(name) {
+	  var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+ 	  for(var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+   }
+   return null;
+}	
+  
+function validatePan() {
+	  var pan = $("#inputForm [name='pan']").val();
+	  
+	  if ( (/[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}/.test(pan))) {
+		  $("#panvalid").hide();
+		  return true;
+	  }
+	  else{
+		  $("#panvalid").show();
+	  	return false;
+	  }
+}
+	
+function validateSecurityCode() {
+	  var pan = $("#inputForm [name='code']").val();
+	  
+	  if ( (/[0-9]{3}/.test(pan))) {
+		  $("#codeid").hide();
+		  return true;
+	  }
+	  else{
+		  $("#codeid").show();
+		  return false;
+	  }
+}
 
+function validateDate() {
+	  var pan = $("#inputForm [name='date']").val();
+	  
+	  if ( (/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(pan))) {
+		  $("#dateid").hide();
+		  return true;
+	  }
+	  else{
+		  $("#dateid").show();
+		  return false;
+	  }
+}
 
 
 </script>
@@ -56,13 +111,15 @@ $(document).ready(
 
 <body class="pozadina">
 
-	<h1 align="center" class="naslov">Bank</h1>
 	
-	<div class="bankb">
+	
+	<div align="center" class="bankb">
+	
+		<h1 class="naslov">Bank</h1>
 	
 		<div class="row" style="background: #fcfa98;">
 		
-		<h3 align="center" class="naslov2">Please, enter your card information </h3>
+		<h3 align="center" >Please, enter your card information </h3>
 		<br>
 		<form id="inputForm">
       	<div>
@@ -84,7 +141,7 @@ $(document).ready(
       	
       	
       	<div >
-      		<button id="ok" style="margin-left: 130px; margin-bottom: 20px; width: 3cm;" type="button" class="btn btn-success">OK</button>
+      		<button align="center" id="ok" style=" margin-bottom: 20px; width: 3cm;" type="button" class="btn btn-success">OK</button>
       	</div>
       	</form>
       	

@@ -1,2 +1,2 @@
-INSERT INTO `pcc`.`bank` (`id`, `name`, `banknumber`, `bankserviceurl`) VALUES ('1','BankA','977','http//localhost:..');
-INSERT INTO `pcc`.`bank` (`id`, `name`, `banknumber`, `bankserviceurl`) VALUES ('2','BankB','411','http//localhost:..');
+INSERT INTO `pcc`.`bank` (`id`, `name`, `banknumber`, `bankserviceurl`) VALUES ('1','BankA','977','http://localhost:8097/request/checkPCCrequest');
+INSERT INTO `pcc`.`bank` (`id`, `name`, `banknumber`, `bankserviceurl`) VALUES ('2','BankB','411','http://localhost:8010/request/checkPCCrequest');

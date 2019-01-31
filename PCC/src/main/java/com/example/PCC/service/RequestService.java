@@ -28,21 +28,36 @@ public class RequestService {
 		String[] delovi = request.getPan().split(" ");
 		String deo = delovi[0].substring(0, Math.min(delovi[0].length(), 3));
 		
+		String response="";
+		boolean correctpan = true;
+		
 		for(int i=0; i<banks.size(); i++) {
 			
 			if(deo.equals(banks.get(i).getBanknumber())) {
-				System.out.println("nasao banku");
+				
 				
 				HttpHeaders header = new HttpHeaders();
 				HttpEntity entity = new HttpEntity(request, header);
 				
-				//String response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, String.class);
+				response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, String.class);
+				System.out.println(response);
+				correctpan=true;
+				break;
+			}
+			else {
+				
+				correctpan=false;
 			}
 		}
 		
 		
+		if(correctpan==false) {
+			System.out.println("Pan nije validan");
+			response= "Niste uneli validan pan, pokusajte ponovo !";
+		}
 		
-		return null;
+		return response;
+	
 	}
 	
 }

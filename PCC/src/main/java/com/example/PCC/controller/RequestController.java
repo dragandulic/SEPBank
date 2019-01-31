@@ -19,10 +19,9 @@ public class RequestController {
 	@PostMapping("/checkRequest")
 	public String checkRequest(@RequestBody Request request) {
 		
-		
 		String response = requestService.checkReq(request);
 		
-		return "POZDRAV IZ PCC";
+		return response;
 	}
 	
 	@PostMapping("/forwardRequest")

@@ -45,19 +45,19 @@ public class CardController {
 	public void check(@RequestBody CardDTO card) {
 		boolean valid = false;
 		
-		 Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
-		 Matcher matcher1 = VALID_SECURITYCODE_REGEX .matcher(card.getSecuritycode());
+		Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
+		Matcher matcher1 = VALID_SECURITYCODE_REGEX .matcher(card.getSecuritycode());
 		 
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		 String reportDate = df.format(card.getExpirationdate());
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String reportDate = df.format(card.getExpirationdate());
 		
-		 Matcher matcher2 = VALID_DATE_REGEX .matcher(reportDate);
+		Matcher matcher2 = VALID_DATE_REGEX .matcher(reportDate);
 		 
-		 if(matcher.find() && matcher1.find() && matcher2.find()){
+		if(matcher.find() && matcher1.find() && matcher2.find()){
 			String res = cardService.checkcard(card);
-		 }else{
-			 System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
-		 }
+		}else{
+			System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
+		}
 		
 	
 		
