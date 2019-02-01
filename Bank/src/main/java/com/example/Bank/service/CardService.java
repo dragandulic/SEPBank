@@ -130,6 +130,8 @@ public class CardService {
 			long number = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
 			pccr.setAcquirer_order_id(number);
 			
+			pccr.setMerchant_id(r.getMerchant_id());
+			
 			String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -148,10 +150,27 @@ public class CardService {
 			HttpEntity entity = new HttpEntity(pccr, header);
 			
 			PCCresponse res = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, PCCresponse.class);
-			System.out.println("CARD AUTHENTICATION: " + res.isCardauthentication());
-			System.out.println("TRANSACTION AUTHORIZATION: " + res.isTransactionauthorization());
-			System.out.println("ISSUER_ORDER_ID: " + res.getIssuer_order_id());
-			System.out.println("ACCUORER_ORDER_ID:" + res.getAcquirer_order_id());
+			if(res.isCardauthentication()) {
+				if(res.isTransactionauthorization()) {
+					PCCrequest rt = pccrequestRepository.findByAccourerOrderIdEquals(res.getAcquirer_order_id());
+					Merchant magazin = bankRepository.findByMerchantIdEquals(rt.getMerchant_id());
+					
+					BankAccount bankac = magazin.getBankaccount();
+					bankac.setSum(bankac.getSum()+rt.getAmount());
+					bankAccountRepository.save(bankac);
+					
+					rt.setIspayment(true);
+					pccrequestRepository.save(rt);
+					
+					
+					
+				}else {
+					System.out.println("transakcija nije uspeno izvrsena na banci kupca");
+				}
+			}else {
+				System.out.println("Kartica nije validna");
+			}
+			
 		}
 		
 		

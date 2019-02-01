@@ -36,6 +36,10 @@ public class PCCrequest {
 	
 	private double amount;
 	
+	private String merchant_id;
+	
+	private boolean ispayment;
+	
 	public PCCrequest() {
 		
 	}
@@ -102,6 +106,22 @@ public class PCCrequest {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+
+	public String getMerchant_id() {
+		return merchant_id;
+	}
+
+	public void setMerchant_id(String merchant_id) {
+		this.merchant_id = merchant_id;
+	}
+
+	public boolean isIspayment() {
+		return ispayment;
+	}
+
+	public void setIspayment(boolean ispayment) {
+		this.ispayment = ispayment;
 	}
 	
 	
