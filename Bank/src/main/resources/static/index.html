@@ -37,7 +37,7 @@ $(document).ready(
 	            securitycode:$("#inputForm [name='code']").val(),
 	            cardholdername:$("#inputForm [name='name']").val(),
 	            expirationdate:$("#inputForm [name='date']").val(),
-	            merchantid:getCookie('merchantmag')
+	            requestid:getCookie('currentpayment')
 	        });
 			$.ajax({
 				url: "/card/checkCard",
@@ -48,6 +48,18 @@ $(document).ready(
 				datatype: 'json',
 				success: function(data) {
 					
+					if(data == "podaci o kartici nisu ispravni"){
+						//korisnik nije uneo dobre podatke o kartici
+						console.log("podaci o kartici nisu ispravni");
+					}
+					else if(data == "neuspesan transfer novca"){
+						//ovde valjda treba na error da ide
+						console.log("Valjda treba na error da ide");
+					}
+					else{
+						//ovde je uspesno ili failed
+						window.location.href = data;
+					}
 				  }
 				});
 		}

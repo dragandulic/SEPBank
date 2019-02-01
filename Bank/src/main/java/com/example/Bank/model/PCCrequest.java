@@ -1,14 +1,22 @@
-package com.example.Bank.dto;
+package com.example.Bank.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class CardDTO {
+@Entity
+public class PCCrequest {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	private String pan;
 	
@@ -20,11 +28,23 @@ public class CardDTO {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING,timezone = "Europe/Madrid")
 	private Date expirationdate;
 	
+	private Long acquirer_order_id;
 	
-	private String requestid;
+	@Temporal(value = TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING,timezone = "Europe/Madrid")
+	private Date acquirer_timestamp;
 	
-	public CardDTO() {
+	
+	public PCCrequest() {
 		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPan() {
@@ -59,14 +79,21 @@ public class CardDTO {
 		this.expirationdate = expirationdate;
 	}
 
-	public String getRequestid() {
-		return requestid;
+	public Long getAcquirer_order_id() {
+		return acquirer_order_id;
 	}
 
-	public void setRequestid(String requestid) {
-		this.requestid = requestid;
+	public void setAcquirer_order_id(Long acquirer_order_id) {
+		this.acquirer_order_id = acquirer_order_id;
 	}
 
+	public Date getAcquirer_timestamp() {
+		return acquirer_timestamp;
+	}
+
+	public void setAcquirer_timestamp(Date acquirer_timestamp) {
+		this.acquirer_timestamp = acquirer_timestamp;
+	}
 	
 	
 }

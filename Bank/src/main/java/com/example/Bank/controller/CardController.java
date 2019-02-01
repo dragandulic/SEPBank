@@ -42,7 +42,7 @@ public class CardController {
 	
 	
 	@PostMapping("/checkCard")
-	public void check(@RequestBody CardDTO card) {
+	public String check(@RequestBody CardDTO card) {
 		boolean valid = false;
 		
 		Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
@@ -55,11 +55,12 @@ public class CardController {
 		 
 		if(matcher.find() && matcher1.find() && matcher2.find()){
 			String res = cardService.checkcard(card);
+			return res;
 		}else{
-			System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
+			System.out.println("PODACI O KARTICI SU NEVALIDNI");
 		}
 		
-	
+		return "neuspesan transfer novca";	
 		
 	}
 

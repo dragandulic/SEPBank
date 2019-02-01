@@ -3,12 +3,11 @@ package com.example.Bank.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.Bank.model.Card;
+import com.example.Bank.model.Request;
 
 @Repository
-public interface CardRepository extends JpaRepository<Card, Long> {
+public interface RequestRepository extends JpaRepository<Request, Long> {
 
-	Card findByIdEquals(Long id);
+	Request findByIdEquals(Long id);
 	
-	Card findByPanEquals(String pan);
 }

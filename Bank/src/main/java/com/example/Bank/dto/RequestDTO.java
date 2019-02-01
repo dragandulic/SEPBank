@@ -13,6 +13,12 @@ public class RequestDTO {
 	
 	private String merchant_order_id;
 	
+	private String successurl;
+	
+	private String failedurl;
+	
+	private String errorurl;
+	
 	private RequestDTO() {
 		
 	}
@@ -55,6 +61,30 @@ public class RequestDTO {
 
 	public void setMerchant_order_id(String merchant_order_id) {
 		this.merchant_order_id = merchant_order_id;
+	}
+
+	public String getSuccessurl() {
+		return successurl;
+	}
+
+	public void setSuccessurl(String successurl) {
+		this.successurl = successurl;
+	}
+
+	public String getFailedurl() {
+		return failedurl;
+	}
+
+	public void setFailedurl(String failedurl) {
+		this.failedurl = failedurl;
+	}
+
+	public String getErrorurl() {
+		return errorurl;
+	}
+
+	public void setErrorurl(String errorurl) {
+		this.errorurl = errorurl;
 	}
 	
 }
