@@ -162,8 +162,11 @@ public class CardService {
 			
 			
 			PCCresponse response = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, PCCresponse.class);
-			System.out.println(response);
 			
+			System.out.println("CARD AUTHENTICATION: " + response.isCardauthentication());
+			System.out.println("TRANSACTION AUTHORIZATION: " + response.isTransactionauthorization());
+			System.out.println("ISSUER_ORDER_ID: " + response.getIssuer_order_id());
+			System.out.println("ACCUORER_ORDER_ID:" + response.getAcquirer_order_id());
 		}
 				
 		return null;
