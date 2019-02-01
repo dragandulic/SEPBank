@@ -20,11 +20,13 @@ import com.example.BankB.model.BankAccount;
 import com.example.BankB.model.Card;
 import com.example.BankB.model.Merchant;
 import com.example.BankB.model.PCCrequest;
+import com.example.BankB.model.PCCresponse;
 import com.example.BankB.model.Request;
 import com.example.BankB.repository.BankAccountRepository;
 import com.example.BankB.repository.BankRepository;
 import com.example.BankB.repository.CardRepository;
 import com.example.BankB.repository.PCCrequestRepository;
+import com.example.BankB.repository.PCCresponseRepository;
 import com.example.BankB.repository.RequestRepository;
 
 
@@ -49,6 +51,10 @@ public class CardService {
 	
 	@Autowired
 	private PCCrequestRepository pccrequestRepository;
+	
+	@Autowired
+	private PCCresponseRepository pccresponseRepository;
+	
 	
 	public String checkcard(CardDTO card) {
 		
@@ -155,7 +161,7 @@ public class CardService {
 			HttpEntity entity = new HttpEntity(pccrequest, header);
 			
 			
-			String response = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, String.class);
+			PCCresponse response = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, PCCresponse.class);
 			System.out.println(response);
 			
 		}
@@ -164,9 +170,9 @@ public class CardService {
 	}
 	
 	//provera se kartica koja je stigla od banke A preko PCC
-	public String checkPCCrequest(PCCrequest card) {
+	public PCCresponse checkPCCrequest(PCCrequest card) {
 		
-		
+		PCCresponse pccresponse = new PCCresponse();
 		
 		List<Card> cards = cardRepository.findAll();
 		
@@ -188,6 +194,8 @@ public class CardService {
 					System.out.println("PRODAVAC I KUPAC NISU U ISTOJ BANCI ");
 					System.out.println("KARTICA KUPCA JE VALIDNA");
 					
+					pccresponse.setCardauthentication(true);
+					
 					
 					BankAccount b2=cards.get(i).getBankaccount();
 					double suma2=b2.getSum();
@@ -198,7 +206,17 @@ public class CardService {
 					
 						b2.setSum(suma2);
 						bankAccountRepository.save(b2);
-						return "okk";
+						
+						pccresponse.setTransactionauthorization(true);
+						pccresponse.setAcquirer_order_id(card.getAcquirer_order_id());
+						pccresponse.setAcquirer_timestamp(card.getAcquirer_timestamp());
+						long number1 = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
+						pccresponse.setIssuer_order_id(number1);
+						pccresponse.setIssuer_timestamp(now);
+						
+						pccresponseRepository.save(pccresponse);
+						
+						return pccresponse;
 					}
 					
 				}
@@ -215,7 +233,7 @@ public class CardService {
 		
 		
 		
-		return null;
+		return pccresponse;
 	}
 
 }
