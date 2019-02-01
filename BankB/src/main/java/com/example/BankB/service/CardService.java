@@ -24,6 +24,7 @@ import com.example.BankB.model.Request;
 import com.example.BankB.repository.BankAccountRepository;
 import com.example.BankB.repository.BankRepository;
 import com.example.BankB.repository.CardRepository;
+import com.example.BankB.repository.PCCrequestRepository;
 import com.example.BankB.repository.RequestRepository;
 
 
@@ -46,6 +47,8 @@ public class CardService {
 	@Autowired
 	private BankAccountRepository bankAccountRepository;
 	
+	@Autowired
+	private PCCrequestRepository pccrequestRepository;
 	
 	public String checkcard(CardDTO card) {
 		
@@ -142,6 +145,12 @@ public class CardService {
 			
 			pccrequest.setAcquirer_timestamp(now);
 			
+			Request r = requestRepository.findByIdEquals(Long.parseLong(card.getRequestid()));
+			
+			pccrequest.setAmount(r.getAmount());
+			
+			pccrequestRepository.save(pccrequest);
+			
 			HttpHeaders header = new HttpHeaders();
 			HttpEntity entity = new HttpEntity(pccrequest, header);
 			
@@ -155,7 +164,7 @@ public class CardService {
 	}
 	
 	//provera se kartica koja je stigla od banke A preko PCC
-	public String checkPCCrequest(PCCrequestDTO card) {
+	public String checkPCCrequest(PCCrequest card) {
 		
 		
 		List<Card> cards = cardRepository.findAll();
