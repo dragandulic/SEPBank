@@ -167,6 +167,7 @@ public class CardService {
 	public String checkPCCrequest(PCCrequest card) {
 		
 		
+		
 		List<Card> cards = cardRepository.findAll();
 		
 		for(int i=0; i<cards.size(); i++) {
@@ -186,6 +187,19 @@ public class CardService {
 				if(now.compareTo(card.getExpirationdate())<=0){
 					System.out.println("PRODAVAC I KUPAC NISU U ISTOJ BANCI ");
 					System.out.println("KARTICA KUPCA JE VALIDNA");
+					
+					
+					BankAccount b2=cards.get(i).getBankaccount();
+					double suma2=b2.getSum();
+					
+					
+					if(suma2>=card.getAmount()) {
+						suma2 = suma2 - card.getAmount();
+					
+						b2.setSum(suma2);
+						bankAccountRepository.save(b2);
+						return "okk";
+					}
 					
 				}
 				else {
