@@ -73,8 +73,8 @@ public class CardService {
 						&& cards.get(i).getCardholdername().equals(card.getCardholdername())) {
 					
 					
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					
 					Date now=null;
 					try {
@@ -127,13 +127,14 @@ public class CardService {
 			pccr.setSecuritycode(card.getSecuritycode());
 			Request r = requestRepository.findByIdEquals(Long.valueOf(card.getRequestid()).longValue());
 			pccr.setAmount(r.getAmount());
+			System.out.println("AMOUNTTTTT: " + r.getAmount());
 			long number = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
 			pccr.setAcquirer_order_id(number);
 			
 			pccr.setMerchant_id(r.getMerchant_id());
 			
-			String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			
 			Date now=null;
 			try {
@@ -162,20 +163,19 @@ public class CardService {
 					rt.setIspayment(true);
 					pccrequestRepository.save(rt);
 					
-					
-					
+					String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+
+					return r.getSuccessurl();
 				}else {
 					System.out.println("transakcija nije uspeno izvrsena na banci kupca");
+					return r.getFailedurl();
 				}
 			}else {
 				System.out.println("Kartica nije validna");
+				return "podaci o kartici nisu ispravni";
 			}
 			
 		}
-		
-		
-
-		return null;
 	}
 	
 	
@@ -190,8 +190,8 @@ public class CardService {
 			if(cards.get(i).getPan().equals(card.getPan()) && cards.get(i).getSecuritycode().equals(card.getSecuritycode())
 					&& cards.get(i).getCardholdername().equals(card.getCardholdername())) {
 				
-				String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					
 				Date now=null;
 				try {

@@ -50,6 +50,7 @@ $(document).ready(
 					
 					if(data == "podaci o kartici nisu ispravni"){
 						//korisnik nije uneo dobre podatke o kartici
+						 $("#info").show();
 						console.log("podaci o kartici nisu ispravni");
 					}
 					else if(data == "neuspesan transfer novca"){
@@ -135,6 +136,7 @@ $(document).ready(
     	</div>
     	<div class="col-sm-8" style="background: #d5deea;">
     	<h2 align="center">Please, enter your card information </h2>
+    	<p id="info" hidden style="font-size: 19px; background: red">Card doesn't exist!</p>
     	<form id="inputForm">
       	<div>
       		<label>PAN</label>

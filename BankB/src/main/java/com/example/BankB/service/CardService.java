@@ -74,8 +74,8 @@ public class CardService {
 				if(cards.get(i).getPan().equals(card.getPan()) && cards.get(i).getSecuritycode().equals(card.getSecuritycode())
 						&& cards.get(i).getCardholdername().equals(card.getCardholdername())) {
 				
-					String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					
 					Date now=null;
 					try {
@@ -141,8 +141,8 @@ public class CardService {
 			
 			
 			
-			String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			
 			Date now=null;
 			try {
@@ -167,10 +167,6 @@ public class CardService {
 			
 			PCCresponse response = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, PCCresponse.class);
 			
-			System.out.println("CARD AUTHENTICATION: " + response.isCardauthentication());
-			System.out.println("TRANSACTION AUTHORIZATION: " + response.isTransactionauthorization());
-			System.out.println("ISSUER_ORDER_ID: " + response.getIssuer_order_id());
-			System.out.println("ACCUORER_ORDER_ID:" + response.getAcquirer_order_id());
 			
 			if(response.isCardauthentication()) {
 				if(response.isTransactionauthorization()) {
@@ -180,28 +176,30 @@ public class CardService {
 					Merchant m = bankRepository.findByMerchantIdEquals(req.getMerchant_id());
 					
 					BankAccount ba = m.getBankaccount();
-					
-					double sum1= ba.getSum();
-					
-					sum1 = sum1 + req.getAmount();
-					
+					System.out.println("QQQQQQQQQQq " + ba.getSum());
+					ba.setSum(ba.getSum() + req.getAmount());
+					System.out.println("QQQQQQQQQQq " + ba.getSum());
 					bankAccountRepository.save(ba);
 					
 					req.setIspayment(true);
 					
-					pccrequestRepository.save(req);				
+					pccrequestRepository.save(req);			
+					
+					String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+
+					return r.getSuccessurl();
 					
 				}
 				else {
 					System.out.println("transakcija nije uspesno izvrena u banci kupca");
+					return r.getFailedurl();
 				}
 			}
 			else {
 				System.out.println("Kartica nije validna");
+				return "podaci o kartici nisu ispravni";
 			}
 		}
-				
-		return null;
 	}
 	
 	//provera se kartica koja je stigla od banke A preko PCC
@@ -215,8 +213,8 @@ public class CardService {
 			if(cards.get(i).getPan().equals(card.getPan()) && cards.get(i).getSecuritycode().equals(card.getSecuritycode())
 					&& cards.get(i).getCardholdername().equals(card.getCardholdername())) {
 			
-				String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
-				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime());
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				
 				Date now=null;
 				try {
@@ -233,14 +231,14 @@ public class CardService {
 					
 					
 					BankAccount b2=cards.get(i).getBankaccount();
-					double suma2=b2.getSum();
 					
+					System.out.println("EEEEEEEEEE " + card.getAmount());
 					
-					if(suma2>=card.getAmount()) {
+					if(b2.getSum()>=card.getAmount()) {
 						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
-						suma2 = suma2 - card.getAmount();
-					
-						b2.setSum(suma2);
+						
+						b2.setSum(b2.getSum()-card.getAmount());
+						
 						bankAccountRepository.save(b2);
 						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
 						pccresponse.setTransactionauthorization(true);

@@ -46,7 +46,20 @@ $(document).ready(
 			contentType: "application/json",
 			datatype: 'json',
 			success: function(data) {
-				window.location.href=data;
+				
+				if(data == "podaci o kartici nisu ispravni"){
+					//korisnik nije uneo dobre podatke o kartici
+					 $("#info").show();
+					console.log("podaci o kartici nisu ispravni");
+				}
+				else if(data == "neuspesan transfer novca"){
+					//ovde valjda treba na error da ide
+					console.log("Valjda treba na error da ide");
+				}
+				else{
+					//ovde je uspesno ili failed
+					window.location.href = data;
+				}
 			  }
 			});
 		}
@@ -121,6 +134,7 @@ function validateDate() {
 		
 		<h3 align="center" >Please, enter your card information </h3>
 		<br>
+		<p id="info" hidden style="font-size: 19px; background: red">Card doesn't exist!</p>
 		<form id="inputForm">
       	<div>
       		<label>PAN</label>

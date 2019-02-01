@@ -31,14 +31,20 @@ public class Request {
 	
 	private String acquirer_order_id;
 	
-	private String acquirer_timestamp;
+	
+	@Temporal(value = TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", shape = JsonFormat.Shape.STRING,timezone = "Europe/Madrid")
+	private Date acquirer_timestamp;
+	
+	
+	private double amount;
 	
 	public Request() {
 		
 	}
 	
 	public Request(Long id, String pan, String securitycode, String cardholdername, Date expirationdate,
-			String acquirer_order_id, String acquirer_timestamp) {
+			String acquirer_order_id) {
 		
 		this.id = id;
 		this.pan = pan;
@@ -46,7 +52,7 @@ public class Request {
 		this.cardholdername = cardholdername;
 		this.expirationdate = expirationdate;
 		this.acquirer_order_id = acquirer_order_id;
-		this.acquirer_timestamp = acquirer_timestamp;
+		
 	}
 	
 
@@ -92,20 +98,20 @@ public class Request {
 		this.acquirer_order_id = acquirer_order_id;
 	}
 
-	public String getAcquirer_timestamp() {
-		return acquirer_timestamp;
-	}
-
-	public void setAcquirer_timestamp(String acquirer_timestamp) {
-		this.acquirer_timestamp = acquirer_timestamp;
-	}
-
 	public String getPan() {
 		return pan;
 	}
 
 	public void setPan(String pan) {
 		this.pan = pan;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 }
