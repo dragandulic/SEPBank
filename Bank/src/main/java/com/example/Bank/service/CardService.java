@@ -177,8 +177,15 @@ public class CardService {
 					System.out.println("PRODAVAC I KUPAC NISU U ISTOJ BANCI ");
 					System.out.println("KARTICA KUPCA JE VALIDNA");
 					
+					Card c = cardRepository.findByPanEquals(card.getPan());
+					BankAccount ba = c.getBankaccount();
 					
-					
+					if(card.getAmount()<=ba.getSum()) {
+						
+						ba.setSum(ba.getSum()-card.getAmount());
+						bankAccountRepository.save(ba);
+						return "okk";
+					}
 					
 						
 				}
