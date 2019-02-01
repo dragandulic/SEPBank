@@ -34,6 +34,7 @@ public class PCCrequest {
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING,timezone = "Europe/Madrid")
 	private Date acquirer_timestamp;
 	
+	private double amount;
 	
 	public PCCrequest() {
 		
@@ -93,6 +94,14 @@ public class PCCrequest {
 
 	public void setAcquirer_timestamp(Date acquirer_timestamp) {
 		this.acquirer_timestamp = acquirer_timestamp;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 	
 	
