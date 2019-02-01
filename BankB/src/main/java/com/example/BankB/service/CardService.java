@@ -139,6 +139,8 @@ public class CardService {
 			long number = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
 			pccrequest.setAcquirer_order_id(number);
 			
+			
+			
 			String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			
@@ -155,6 +157,8 @@ public class CardService {
 			
 			pccrequest.setAmount(r.getAmount());
 			
+			pccrequest.setMerchant_id(r.getMerchant_id());
+			
 			pccrequestRepository.save(pccrequest);
 			
 			HttpHeaders header = new HttpHeaders();
@@ -167,6 +171,34 @@ public class CardService {
 			System.out.println("TRANSACTION AUTHORIZATION: " + response.isTransactionauthorization());
 			System.out.println("ISSUER_ORDER_ID: " + response.getIssuer_order_id());
 			System.out.println("ACCUORER_ORDER_ID:" + response.getAcquirer_order_id());
+			
+			if(response.isCardauthentication()) {
+				if(response.isTransactionauthorization()) {
+					
+					/////////////////////////
+					PCCrequest req = pccrequestRepository.findByAcquirerOrderIdEquals(response.getAcquirer_order_id());
+					Merchant m = bankRepository.findByMerchantIdEquals(req.getMerchant_id());
+					
+					BankAccount ba = m.getBankaccount();
+					
+					double sum1= ba.getSum();
+					
+					sum1 = sum1 + req.getAmount();
+					
+					bankAccountRepository.save(ba);
+					
+					req.setIspayment(true);
+					
+					pccrequestRepository.save(req);				
+					
+				}
+				else {
+					System.out.println("transakcija nije uspesno izvrena u banci kupca");
+				}
+			}
+			else {
+				System.out.println("Kartica nije validna");
+			}
 		}
 				
 		return null;
@@ -205,11 +237,12 @@ public class CardService {
 					
 					
 					if(suma2>=card.getAmount()) {
+						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
 						suma2 = suma2 - card.getAmount();
 					
 						b2.setSum(suma2);
 						bankAccountRepository.save(b2);
-						
+						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
 						pccresponse.setTransactionauthorization(true);
 						pccresponse.setAcquirer_order_id(card.getAcquirer_order_id());
 						pccresponse.setAcquirer_timestamp(card.getAcquirer_timestamp());
