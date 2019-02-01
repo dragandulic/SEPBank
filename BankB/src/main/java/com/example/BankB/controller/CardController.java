@@ -32,9 +32,10 @@ public class CardController {
 	
 	
 	@PostMapping("/checkCard")
-	public void check(@RequestBody CardDTO card) {
+	public String check(@RequestBody CardDTO card) {
 		
 		boolean valid = false;
+		String res="";
 		
 		Matcher matcher = VALID_PAN_REGEX .matcher(card.getPan());
 		Matcher matcher1 = VALID_SECURITYCODE_REGEX .matcher(card.getSecuritycode());
@@ -45,10 +46,12 @@ public class CardController {
 		Matcher matcher2 = VALID_DATE_REGEX .matcher(reportDate);
 		 
 		if(matcher.find() && matcher1.find() && matcher2.find()){
-			String res = cardService.checkcard(card);
+			res = cardService.checkcard(card);
 		}else{
 			System.out.println("NEVALIDNOOOOOOOOOOOOOOOOO");
 		}
+		
+		return res;
 		
 		
 	}

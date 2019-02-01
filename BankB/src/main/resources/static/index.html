@@ -36,7 +36,7 @@ $(document).ready(
             securitycode:$("#inputForm [name='code']").val(),
             cardholdername:$("#inputForm [name='name']").val(),
             expirationdate:$("#inputForm [name='date']").val(),
-            merchantid:getCookie('merchantmag')
+            requestid:getCookie('currentpayment')
         });
 		$.ajax({
 			url: "/card/checkCard",
@@ -46,7 +46,7 @@ $(document).ready(
 			contentType: "application/json",
 			datatype: 'json',
 			success: function(data) {
-				
+				window.location.href=data;
 			  }
 			});
 		}
