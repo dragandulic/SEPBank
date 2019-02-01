@@ -21,11 +21,13 @@ import com.example.Bank.model.BankAccount;
 import com.example.Bank.model.Card;
 import com.example.Bank.model.Merchant;
 import com.example.Bank.model.PCCrequest;
+import com.example.Bank.model.PCCresponse;
 import com.example.Bank.model.Request;
 import com.example.Bank.repository.BankAccountRepository;
 import com.example.Bank.repository.BankRepository;
 import com.example.Bank.repository.CardRepository;
 import com.example.Bank.repository.PCCrequestRepository;
+import com.example.Bank.repository.PCCresponseRepository;
 import com.example.Bank.repository.RequestRepository;
 
 @Service
@@ -49,6 +51,9 @@ public class CardService {
 	
 	@Autowired
 	private PCCrequestRepository pccrequestRepository;
+	
+	@Autowired
+	private PCCresponseRepository pccresponseRepository;
 	
 	
 	public String checkcard(CardDTO card) {
@@ -142,8 +147,11 @@ public class CardService {
 			HttpHeaders header = new HttpHeaders();	
 			HttpEntity entity = new HttpEntity(pccr, header);
 			
-			String s = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, String.class);
-			System.out.println(s);
+			PCCresponse res = restTemplate.postForObject("http://localhost:8009/request/checkRequest", entity, PCCresponse.class);
+			System.out.println("CARD AUTHENTICATION: " + res.isCardauthentication());
+			System.out.println("TRANSACTION AUTHORIZATION: " + res.isTransactionauthorization());
+			System.out.println("ISSUER_ORDER_ID: " + res.getIssuer_order_id());
+			System.out.println("ACCUORER_ORDER_ID:" + res.getAcquirer_order_id());
 		}
 		
 		
@@ -154,9 +162,9 @@ public class CardService {
 	
 	
 	//provera se kartica koja je stigla od druge banke preko PCC
-	public String checkPCCrequest(PCCrequest card) {
+	public PCCresponse checkPCCrequest(PCCrequest card) {
 			
-			
+		PCCresponse pccresponse = new PCCresponse();
 		List<Card> cards = cardRepository.findAll();
 			
 		for(int i=0; i<cards.size(); i++) {
@@ -177,6 +185,8 @@ public class CardService {
 					System.out.println("PRODAVAC I KUPAC NISU U ISTOJ BANCI ");
 					System.out.println("KARTICA KUPCA JE VALIDNA");
 					
+					pccresponse.setCardauthentication(true);
+					
 					Card c = cardRepository.findByPanEquals(card.getPan());
 					BankAccount ba = c.getBankaccount();
 					
@@ -184,25 +194,26 @@ public class CardService {
 						
 						ba.setSum(ba.getSum()-card.getAmount());
 						bankAccountRepository.save(ba);
-						return "okk";
-					}
-					
 						
+						pccresponse.setTransactionauthorization(true);
+						pccresponse.setAcquirer_order_id(card.getAcquirer_order_id());
+						pccresponse.setAcquirer_timestamp(card.getAcquirer_timestamp());
+						long number = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
+						pccresponse.setIssuer_order_id(number);
+						pccresponse.setIssuer_timestamp(now);
+						pccresponseRepository.save(pccresponse);
+						return pccresponse;
+					}		
 				}
 				else {
 					System.out.println("KARTICA KUPCA NIJE VALIDNA ZBOG DATUMA");
-				}
-				
+				}	
 			}
 			else {
 				System.out.println("KARTICA KUPCA NIJE VALIDNA ZBOG OSTALIH PODATAKA");
-			}
-				
+			}		
 		}
-			
-			
-			
-		return null;
+		return pccresponse;
 	}
 	
 	

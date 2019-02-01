@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.PCC.model.Bank;
 import com.example.PCC.model.Request;
+import com.example.PCC.model.Response;
 import com.example.PCC.repository.BankRepository;
 
 @Service
@@ -21,14 +22,14 @@ public class RequestService {
 	@Autowired
 	private RestTemplate restTemplate; 
 	
-	public String checkReq(Request request) {
+	public Response checkReq(Request request) {
 		
 		List<Bank> banks = bankRepository.findAll();
 		
 		String[] delovi = request.getPan().split(" ");
 		String deo = delovi[0].substring(0, Math.min(delovi[0].length(), 3));
 		
-		String response="";
+		Response response = new Response();
 		boolean correctpan = true;
 		
 		for(int i=0; i<banks.size(); i++) {
@@ -39,8 +40,7 @@ public class RequestService {
 				HttpHeaders header = new HttpHeaders();
 				HttpEntity entity = new HttpEntity(request, header);
 				
-				response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, String.class);
-				System.out.println(response);
+				response = restTemplate.postForObject(banks.get(i).getBankserviceurl(), entity, Response.class);
 				correctpan=true;
 				break;
 			}
@@ -49,13 +49,7 @@ public class RequestService {
 				correctpan=false;
 			}
 		}
-		
-		
-		if(correctpan==false) {
-			System.out.println("Pan nije validan");
-			response= "Niste uneli validan pan, pokusajte ponovo !";
-		}
-		
+
 		return response;
 	
 	}

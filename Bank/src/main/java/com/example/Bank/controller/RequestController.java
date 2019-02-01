@@ -11,6 +11,7 @@ import com.example.Bank.dto.PCCrequestDTO;
 import com.example.Bank.dto.RequestDTO;
 import com.example.Bank.model.Merchant;
 import com.example.Bank.model.PCCrequest;
+import com.example.Bank.model.PCCresponse;
 import com.example.Bank.model.Request;
 import com.example.Bank.repository.BankRepository;
 import com.example.Bank.repository.RequestRepository;
@@ -61,12 +62,12 @@ public class RequestController {
 	
 	//proverava zahtev koji je stigao iz Banke B preko PCC
 	@PostMapping("/checkPCCrequest")
-	public String checkPCCrequest(@RequestBody PCCrequest pcc) {
+	public PCCresponse checkPCCrequest(@RequestBody PCCrequest pcc) {
 			
-		String response = cardService.checkPCCrequest(pcc);
+		PCCresponse response = cardService.checkPCCrequest(pcc);
 		
 
-		return "dosao u banku a";
+		return response;
 	}
 	
 	

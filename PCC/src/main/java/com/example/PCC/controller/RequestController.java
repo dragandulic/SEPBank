@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.PCC.model.Request;
+import com.example.PCC.model.Response;
 import com.example.PCC.service.RequestService;
 
 @RestController
@@ -17,9 +18,9 @@ public class RequestController {
 	private RequestService requestService;
 	
 	@PostMapping("/checkRequest")
-	public String checkRequest(@RequestBody Request request) {
+	public Response checkRequest(@RequestBody Request request) {
 		
-		String response = requestService.checkReq(request);
+		Response response = requestService.checkReq(request);
 		
 		return response;
 	}
