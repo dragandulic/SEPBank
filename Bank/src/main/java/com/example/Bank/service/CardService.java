@@ -1,6 +1,7 @@
 package com.example.Bank.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.text.ParseException;
 
 import com.example.Bank.dto.CardDTO;
@@ -103,7 +105,27 @@ public class CardService {
 								mba.setSum(mba.getSum()+r.getAmount());
 								bankAccountRepository.save(mba);
 								
-								String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+								
+								Map<String, Object> mapa = new HashMap<>();
+								mapa.put("status", "paid");
+								mapa.put("type", "bank");
+								mapa.put("currency", "EUR");
+								mapa.put("amount", r.getAmount());
+								mapa.put("merchant", m.getMerchant_id());
+								
+								String reportDate = formatter.format(now);
+								mapa.put("time",reportDate );
+								
+								
+								HttpHeaders h = new HttpHeaders();
+								
+								HttpEntity<Map<String, Object>> e = new HttpEntity<Map<String, Object>>(mapa, h);
+								
+								String re = restTemplate.postForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), e, String.class);
+								
+								
+								
+								//String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
 								
 								return r.getSuccessurl();
 							}
@@ -127,7 +149,7 @@ public class CardService {
 			pccr.setSecuritycode(card.getSecuritycode());
 			Request r = requestRepository.findByIdEquals(Long.valueOf(card.getRequestid()).longValue());
 			pccr.setAmount(r.getAmount());
-			System.out.println("AMOUNTTTTT: " + r.getAmount());
+			
 			long number = (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
 			pccr.setAcquirer_order_id(number);
 			
@@ -163,7 +185,32 @@ public class CardService {
 					rt.setIspayment(true);
 					pccrequestRepository.save(rt);
 					
-					String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+					
+					Map<String, Object> mapa = new HashMap<>();
+					mapa.put("status", "paid");
+					mapa.put("type", "bank");
+					mapa.put("currency", "EUR");
+					mapa.put("amount", r.getAmount());
+					mapa.put("merchant", magazin.getMerchant_id());
+					
+					String reportDate = formatter.format(now);
+					mapa.put("time",reportDate );
+					
+					
+					HttpHeaders h = new HttpHeaders();
+					
+					HttpEntity<Map<String, Object>> e = new HttpEntity<Map<String, Object>>(mapa, h);
+					
+					String re = restTemplate.postForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), e, String.class);
+					
+					
+					
+					
+					
+					
+					
+					
+					//String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
 
 					return r.getSuccessurl();
 				}else {

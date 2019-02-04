@@ -5,7 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +114,29 @@ public class CardService {
 							//saljem koncetratoru placanja da je izvrsena transakcija
 							
 							
-							String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+							Map<String, Object> mapa = new HashMap<>();
+							mapa.put("status", "paid");
+							mapa.put("type", "bank");
+							mapa.put("currency", "EUR");
+							mapa.put("amount", r.getAmount());
+							mapa.put("merchant", m.getMerchant_id());
+							
+							String reportDate = formatter.format(now);
+							mapa.put("time",reportDate );
+							
+							
+							HttpHeaders h = new HttpHeaders();
+							
+							HttpEntity<Map<String, Object>> e = new HttpEntity<Map<String, Object>>(mapa, h);
+							
+							String re = restTemplate.postForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), e, String.class);
+							
+							
+							
+							
+							
+							
+							//String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
 							
 							
 							return r.getSuccessurl();
@@ -185,7 +209,33 @@ public class CardService {
 					
 					pccrequestRepository.save(req);			
 					
-					String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
+					
+					Map<String, Object> mapa = new HashMap<>();
+					mapa.put("status", "paid");
+					mapa.put("type", "bank");
+					mapa.put("currency", "EUR");
+					mapa.put("amount", r.getAmount());
+					mapa.put("merchant", m.getMerchant_id());
+					
+					String reportDate = formatter.format(now);
+					mapa.put("time",reportDate );
+					
+					
+					HttpHeaders h = new HttpHeaders();
+					
+					HttpEntity<Map<String, Object>> e = new HttpEntity<Map<String, Object>>(mapa, h);
+					
+					String re = restTemplate.postForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), e, String.class);
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					//String result = restTemplate.getForObject("http://localhost:8051/objectpayment/successpayment/" + r.getMerchant_order_id(), String.class);
 
 					return r.getSuccessurl();
 					
