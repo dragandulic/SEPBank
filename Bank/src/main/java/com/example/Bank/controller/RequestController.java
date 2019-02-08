@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Bank.dto.DataLoaderComponent;
 import com.example.Bank.dto.PCCrequestDTO;
 import com.example.Bank.dto.RequestDTO;
 import com.example.Bank.model.Merchant;
@@ -30,10 +31,12 @@ public class RequestController {
 	@Autowired
 	private RequestRepository requestRepository;
 	
+	@Autowired
+	private DataLoaderComponent dataLoaderComponent;
+	
 	@PostMapping("/checkrequest")
 	public String checkRequest(@RequestBody RequestDTO requestdto){
 		
-		System.out.println("DOSAOOOOO U KONTROLER BANKE, MERCHANT_ID=" + requestdto.getMerchant_id());
 		
 		Merchant merchant = bankRepository.findByMerchantIdEquals(requestdto.getMerchant_id());
 		
@@ -50,7 +53,7 @@ public class RequestController {
 				r.setFailedurl(requestdto.getFailedurl());
 				r.setMerchant_order_id(requestdto.getMerchant_order_id());
 				Request req = requestRepository.save(r);
-				return "http://localhost:8097/index.html/id=" + req.getId();
+				return "http://" + dataLoaderComponent.getIp() + ":8097/index.html/id=" + req.getId();
 			}
 		}
 		

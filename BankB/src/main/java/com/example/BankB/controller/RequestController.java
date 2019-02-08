@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.BankB.dto.DataLoaderComponent;
 import com.example.BankB.dto.PCCrequestDTO;
 import com.example.BankB.model.Merchant;
 import com.example.BankB.model.PCCrequest;
@@ -28,6 +29,9 @@ public class RequestController {
 	@Autowired
 	private RequestRepository requestRepository;
 	
+	@Autowired
+	private DataLoaderComponent dataLoaderComponent;
+	
 	@PostMapping("/checkrequest")
 	public String checkRequest(@RequestBody Request request) {
 		
@@ -39,7 +43,7 @@ public class RequestController {
 				Request r =requestRepository.save(request);
 				
 				//stranica na koju se redirektuje
-				return "http://localhost:8010/index.html/id="+r.getId();
+				return "http://" + dataLoaderComponent.getIp() + ":8010/index.html/id="+r.getId();
 			}
 		}
 		
