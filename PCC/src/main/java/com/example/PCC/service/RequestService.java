@@ -40,7 +40,7 @@ public class RequestService {
 			
 			if(deo.equals(banks.get(i).getBanknumber())) {
 				
-				logger.info("Method: checkcard -> Buyer's bank number is "+banks.get(i).getBanknumber()+" and she was successfully found!");
+				logger.info("Method: checkcard -> Buyer's bank number is "+banks.get(i).getBanknumber()+" and it was successfully found!");
 				HttpHeaders header = new HttpHeaders();
 				HttpEntity entity = new HttpEntity(request, header);
 				
