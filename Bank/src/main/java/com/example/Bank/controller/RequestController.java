@@ -1,5 +1,6 @@
 package com.example.Bank.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,8 @@ public class RequestController {
 	@Autowired
 	private DataLoaderComponent dataLoaderComponent;
 	
+	private Logger logger = Logger.getLogger(RequestController.class);
+	
 	@PostMapping("/checkrequest")
 	public String checkRequest(@RequestBody RequestDTO requestdto){
 		
@@ -43,6 +46,7 @@ public class RequestController {
 		if(merchant!=null) {
 			if(requestdto.getMerchant_password().equals(merchant.getMerchant_password())) {
 				System.out.println("Pronasao merchanta!!!!!!!!!");
+				logger.info("Method: checkRequest -> Merchant '"+ requestdto.getMerchant_id()+"' was successfully found !");
 				Request r = new Request();
 				r.setAmount(requestdto.getAmount());
 				r.setMerchant_id(requestdto.getMerchant_id());
@@ -55,6 +59,12 @@ public class RequestController {
 				Request req = requestRepository.save(r);
 				return "http://" + dataLoaderComponent.getIp() + ":8097/index.html/id=" + req.getId();
 			}
+			else {
+				logger.error("Method: checkrequest -> Merchant '"+ requestdto.getMerchant_id()+"' was unsuccessfully found !");
+			}
+		}
+		else {
+			logger.error("Method: checkrequest -> Merchant '"+ requestdto.getMerchant_id()+"' was unsuccessfully found !");
 		}
 		
 		

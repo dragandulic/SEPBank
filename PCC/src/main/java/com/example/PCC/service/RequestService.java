@@ -2,11 +2,13 @@ package com.example.PCC.service;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 
 import com.example.PCC.model.Bank;
 import com.example.PCC.model.Request;
@@ -22,6 +24,8 @@ public class RequestService {
 	@Autowired
 	private RestTemplate restTemplate; 
 	
+	private Logger logger = Logger.getLogger(RequestService.class);
+	
 	public Response checkReq(Request request) {
 		
 		List<Bank> banks = bankRepository.findAll();
@@ -36,7 +40,7 @@ public class RequestService {
 			
 			if(deo.equals(banks.get(i).getBanknumber())) {
 				
-				
+				logger.info("Method: checkcard -> Buyer's bank number is "+banks.get(i).getBanknumber()+" and she was successfully found!");
 				HttpHeaders header = new HttpHeaders();
 				HttpEntity entity = new HttpEntity(request, header);
 				
@@ -45,7 +49,7 @@ public class RequestService {
 				break;
 			}
 			else {
-				
+				logger.info("Method: checkcard -> Buyer's bank number "+banks.get(i).getBanknumber()+" doesn't exist");
 				correctpan=false;
 			}
 		}

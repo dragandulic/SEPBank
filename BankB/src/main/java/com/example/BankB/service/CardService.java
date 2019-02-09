@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 
 import com.example.BankB.dto.CardDTO;
 import com.example.BankB.dto.PCCrequestDTO;
@@ -57,6 +59,8 @@ public class CardService {
 	@Autowired
 	private PCCresponseRepository pccresponseRepository;
 	
+	private Logger logger = Logger.getLogger(CardService.class);
+	
 	
 	public String checkcard(CardDTO card) {
 		
@@ -89,7 +93,7 @@ public class CardService {
 					if(now.compareTo(card.getExpirationdate())<=0){
 						
 						Request r = requestRepository.findByIdEquals(Long.parseLong(card.getRequestid()));
-						
+						logger.info("Method: checkcard -> Merchant '"+ r.getMerchant_id()+"' and customer, PAN is '"+card.getPan()+"', are from the same bank! ");
 						failedurl = r.getFailedurl();
 						
 						Merchant m = bankRepository.findByMerchantIdEquals(r.getMerchant_id());
@@ -142,11 +146,13 @@ public class CardService {
 							return r.getSuccessurl();
 						}
 						else {
+							logger.info("Method: checkcard -> Customer, PAN is '"+card.getPan()+"' doesn't have enough money!");
 							return r.getFailedurl();
 						}						
 					}				
 				}						
 			}
+			logger.info("Method: checkcard -> Card data isn't valid!");
 			return "Podaci o kartici nisu ispravni!";
 			
 		}
@@ -179,6 +185,7 @@ public class CardService {
 			
 			Request r = requestRepository.findByIdEquals(Long.parseLong(card.getRequestid()));
 			
+			logger.info("Method: checkcard -> Merchant '"+ r.getMerchant_id()+"' and customer, PAN is '"+card.getPan()+"', aren't from the same bank! ");
 			pccrequest.setAmount(r.getAmount());
 			
 			pccrequest.setMerchant_id(r.getMerchant_id());
@@ -194,7 +201,7 @@ public class CardService {
 			
 			if(response.isCardauthentication()) {
 				if(response.isTransactionauthorization()) {
-					
+					logger.info("Method: checkcard -> Payment from this card, PAN is '"+card.getPan()+"', to Merchant '"+r.getMerchant_id()+"' has been performed successfully!");
 					/////////////////////////
 					PCCrequest req = pccrequestRepository.findByAcquirerOrderIdEquals(response.getAcquirer_order_id());
 					Merchant m = bankRepository.findByMerchantIdEquals(req.getMerchant_id());
@@ -241,11 +248,13 @@ public class CardService {
 					
 				}
 				else {
+					logger.info("Method: checkcard -> Payment for this card, PAN is '"+card.getPan()+"' can't be made");
 					System.out.println("transakcija nije uspesno izvrena u banci kupca");
 					return r.getFailedurl();
 				}
 			}
 			else {
+				logger.info("Method: checkcard -> Card data, PAN is '"+card.getPan()+"', isn't valid!");
 				System.out.println("Kartica nije validna");
 				return "podaci o kartici nisu ispravni";
 			}
@@ -288,7 +297,7 @@ public class CardService {
 						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
 						
 						b2.setSum(b2.getSum()-card.getAmount());
-						
+						logger.info("Method: checkPCCrequest -> A card, PAN is '"+card.getPan()+"',  is reserved for "+card.getAmount()+" euros for payment");
 						bankAccountRepository.save(b2);
 						System.out.println("OVOOOOOOOOOOOOOO"+cards.get(i).getBankaccount().getSum());
 						pccresponse.setTransactionauthorization(true);
@@ -305,11 +314,13 @@ public class CardService {
 					
 				}
 				else {
+					logger.info("Method: checkPCCrequest -> Card data, PAN is '"+card.getPan()+"', isn't valid!");
 					System.out.println("KARTICA KUPCA NIJE VALIDNA ZBOG DATUMA");
 				}
 			
 			}
 			else {
+				logger.info("Method: checkPCCrequest -> Card data, PAN is '"+card.getPan()+"', isn't valid!");
 				System.out.println("KARTICA KUPCA NIJE VALIDNA ZBOG OSTALIH PODATAKA");
 			}
 			

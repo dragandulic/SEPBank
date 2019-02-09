@@ -1,10 +1,12 @@
 package com.example.BankB.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import com.example.BankB.dto.DataLoaderComponent;
 import com.example.BankB.dto.PCCrequestDTO;
@@ -32,6 +34,8 @@ public class RequestController {
 	@Autowired
 	private DataLoaderComponent dataLoaderComponent;
 	
+	private Logger logger = Logger.getLogger(RequestController.class);
+	
 	@PostMapping("/checkrequest")
 	public String checkRequest(@RequestBody Request request) {
 		
@@ -40,11 +44,18 @@ public class RequestController {
 		if(merchant!=null) {
 			if(merchant.getMerchant_password().equals(request.getMerchant_password())){
 				System.out.println("Pronasao merchanta u BANK B !!!!!!!!");
+				logger.info("Method: checkRequest -> Merchant '"+ request.getMerchant_id()+"' was successfully found !");
 				Request r =requestRepository.save(request);
 				
 				//stranica na koju se redirektuje
 				return "http://" + dataLoaderComponent.getIp() + ":8010/index.html/id="+r.getId();
 			}
+			else {
+				logger.error("Method: checkrequest -> Merchant '"+ request.getMerchant_id()+"' was unsuccessfully found !");
+			}
+		}
+		else {
+			logger.error("Method: checkrequest -> Merchant '"+ request.getMerchant_id()+"' was unsuccessfully found !");
 		}
 		
 		return "neuspesno";
