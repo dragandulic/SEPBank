@@ -1,4 +1,6 @@
-INSERT INTO `bankb`.`merchant` (`id`, `name`,`merchant_id`,`merchant_password`,`bankaccount_id`) VALUES ('1','Saskin magazin','411sldmcv81yt6j5nf9q2nv0m4u7v9','2',1);
+INSERT INTO `bankb`.`merchant` (`id`, `name`,`merchant_id`,`merchant_password`,`bankaccount_id`) VALUES ('1','Bankarstvo','411sldmcv81yt6j5nf9q2nv0m4u7v9','2',1);
+
+
 
 INSERT INTO `bankb`.`merchant` (`id`, `name`,`merchant_id`,`merchant_password`,`bankaccount_id`) VALUES ('2','Zastita materijala','411BNG5dryh654f6j/9hrEEESX0','password@2',2);
 
